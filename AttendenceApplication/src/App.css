@@ -1,0 +1,6 @@
+:root {
+
+  font-size: clamp(3px, 1.20vw, 40px);
+  font-family: "Roboto",sans-serif;
+
+}
