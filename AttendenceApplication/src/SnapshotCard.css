@@ -1,0 +1,31 @@
+.SnapshotCard {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 2rem;
+}
+
+.SnapshotCard > button {
+    width: 9rem;
+    height: 9rem;
+    border-radius: 100%;
+    background-color: grey;
+    background-image: url("./assets//images/CameraIcon.webp");
+    background-size: cover;
+    background-position: center;
+    border: solid black 0.5rem;
+}
+
+.SnapshotCard > button:hover {
+    background-color: rgb(100, 99, 99);
+}
+
+.SnapshotCard > button:active {
+    background-color: rgb(84, 84, 84);
+}
+
+.SnapshotCard > p {
+    font-size: 300%;
+}

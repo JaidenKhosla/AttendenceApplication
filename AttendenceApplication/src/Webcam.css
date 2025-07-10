@@ -3,13 +3,12 @@
     user-select: none;
     height: 25rem;
     border-radius: 5%;
-    filter: brightness(3) hue-rotate();
     background-color: rgba(25, 24, 24, 0.771);
 }
 
 div#frame {
+    width: 24.5rem;
     filter: none;
-    width: 33.5rem;
     color: white;
     display: flex;
     justify-content: center;

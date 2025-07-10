@@ -1,8 +1,8 @@
 import "./App.css"
-import Webcam from "./Webcam"
+import SnapshotCard from "./SnapshotCard"
 
 export default function App(){
   return <>
-    <Webcam/>
+    <SnapshotCard/>
   </>
 }
