@@ -58,7 +58,7 @@ def predict():
         req = executor.submit(compareFaceRequest, path)
         result = req.result()
         
-        return jsonify({"name": result}), 200
+        return jsonify({"name": result[0], "distance": result[1]}), 200
     
     except Exception as e:
         return str(e), 400

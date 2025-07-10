@@ -7,7 +7,7 @@
     gap: 2rem;
 }
 
-.SnapshotCard > button {
+.SnapshotCard > button.snapBTN {
     width: 9rem;
     height: 9rem;
     border-radius: 100%;
@@ -18,11 +18,11 @@
     border: solid black 0.5rem;
 }
 
-.SnapshotCard > button:hover {
+.SnapshotCard > button.snapBTN:hover {
     background-color: rgb(100, 99, 99);
 }
 
-.SnapshotCard > button:active {
+.SnapshotCard > button.snapBTN:active {
     background-color: rgb(84, 84, 84);
 }
 

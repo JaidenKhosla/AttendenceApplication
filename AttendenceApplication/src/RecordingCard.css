@@ -1,0 +1,14 @@
+.recordingCard {
+    display: flex;
+    flex-direction: column;
+
+    width: fit-content;
+}
+
+.recordingCard > label {
+    font-size: 300%;
+}
+
+.recordingCard > input {
+    font-size: 250%;
+}

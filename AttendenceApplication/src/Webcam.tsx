@@ -3,7 +3,7 @@ import "./Webcam.css"
 
 interface Props {
     referenceProp: React.RefObject<HTMLVideoElement | null> | undefined;
-    shown: boolean | undefined;
+    shown?: boolean | undefined;
 }
 
 export default function Webcam({ referenceProp, shown }: Props){
@@ -20,7 +20,7 @@ export default function Webcam({ referenceProp, shown }: Props){
         })
     }, [])
 
-    return <div className="Webcam" style={{display: shown ? "initial" : "none"}}>
+    return <div className="Webcam" style={{display: shown || shown == undefined ? "initial" : "none"}}>
         {videoStarted ? <video id="frame" ref={(component)=>{streamRef.current = component; if(referenceProp) referenceProp.current = component;}} autoPlay playsInline controls={false}></video> : <div id="frame">Video is not enabled!</div>}
     </div>
 }

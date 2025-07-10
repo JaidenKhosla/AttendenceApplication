@@ -1,17 +1,43 @@
 import { useEffect, useRef } from "react";
 import "./Webcam.css";
 
+import type { setResult } from "./SnapshotCard";
+
 interface Props {
     webcamReference: React.RefObject<HTMLVideoElement|null>
+    setResult: setResult
     shown: boolean
 }
 
-export function downloadImageOfCanvas(canvas: HTMLCanvasElement, path: string){
+export function downloadImageOfCanvas(canvas: HTMLCanvasElement, path: string, setResult: setResult){
     const url = canvas.toDataURL("image/jpeg");
-    localStorage.setItem("webcam-data", url);
+   
+    canvas.toBlob(async (blob) => {
+        if (!blob) return;
+
+        const formData = new FormData();
+        formData.append("image", blob, "snapshot.png");
+
+        const res = await fetch("http://127.0.0.1:5000/predict", {
+            method: "POST",
+            body: formData
+        });
+
+        if(!res.ok){
+            console.error(`Error sending image to backend: ${res.status}`);
+            return;
+        }
+
+        const response = await res.json();
+
+        console.log(response);
+
+        setResult(response);
+    })
+
 }
 
-export default function Snapshot({ webcamReference, shown } : Props){
+export default function Snapshot({ webcamReference, shown, setResult } : Props){
     
     const canvasRef = useRef<HTMLCanvasElement|null>(null);
     
@@ -23,7 +49,7 @@ export default function Snapshot({ webcamReference, shown } : Props){
         const ctx = canvasRef.current.getContext("2d");
         if(ctx) ctx.drawImage(webcamReference.current, 0,0, canvasRef.current.width, canvasRef.current.height);
         
-        downloadImageOfCanvas(canvasRef.current, "/webcamData/image.jpeg");
+        downloadImageOfCanvas(canvasRef.current, "/webcamData/image.jpeg", setResult);
 
     }, [ webcamReference.current ])
 
