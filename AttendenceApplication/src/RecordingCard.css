@@ -3,6 +3,13 @@
     flex-direction: column;
 
     width: fit-content;
+
+    gap: 2rem;
+
+    padding: 5rem;
+    background-color: rgb(234, 232, 232);
+    border: solid 1.5rem blue;
+    border-radius: 5%;
 }
 
 .recordingCard > label {
@@ -10,5 +17,9 @@
 }
 
 .recordingCard > input {
+    font-size: 250%;
+}
+
+.recordingCard > p {
     font-size: 250%;
 }

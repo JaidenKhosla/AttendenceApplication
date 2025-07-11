@@ -4,6 +4,6 @@ import SnapshotCard from "./SnapshotCard"
 
 export default function App(){
   return <>
-    <RecordingCard/>
+    <SnapshotCard/>
   </>
 }

@@ -51,7 +51,7 @@ export default function Snapshot({ webcamReference, shown, setResult } : Props){
         
         downloadImageOfCanvas(canvasRef.current, "/webcamData/image.jpeg", setResult);
 
-    }, [ webcamReference.current ])
+    }, [ webcamReference.current ]);
 
     return (<canvas id="frame" ref={canvasRef} style={{display: shown ? "initial" : "none"}}/>);
 }

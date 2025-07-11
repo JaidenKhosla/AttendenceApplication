@@ -6,25 +6,25 @@ const timeForRecording: number = 10;
 
 interface formData {
     name: string;
-    age: number;
-    date: Date;
-    video: VideoFrame[]
 }
 
 const initialFormData: formData = {
-    name: "John Doe",
-    age: 15,
-    date: new Date(),
-    video: [],
+    name: ""
+}
+
+interface Props {
+    checkIn: Function
 }
 
 
-
-export default function RecordingCard(){
+export default function RecordingCard({checkIn} : Props){
     
     const webcamReference = useRef<HTMLVideoElement|null>(null);
-    const [useFormData, setFormData] = useState<formData>(initialFormData);
-    const [useSeconds, setSeconds] = useState<number>(timeForRecording);
+    const [useFormData, setFormData] = useState<formData>({
+        name: ""
+    });
+    const seconds = useRef<number>(timeForRecording);
+    const [useMsg, setMsg] = useState<string>("");
     const [ useDebounce, setDebounce ] = useState<boolean>(false);
 
 
@@ -64,31 +64,41 @@ export default function RecordingCard(){
                 if(!res.ok) console.error(`Upload failed with a ${res.status} code.`);
                 return res.json();
             }).then((data)=>{
-                console.log(data);
+                setMsg(data["message"])
+                setTimeout(()=>{
+                    checkIn(uploadData.get("name"));
+                }, 1500);
             })
         }
 
         recorder.start();
 
         const intervalID = setInterval(()=>{
-            setSeconds((n)=>--n);
+            seconds.current--;
+            console.log(seconds.current);
+            setMsg(`Please look at the camera for ${seconds.current} more seconds.`);
         },1000)
 
         setTimeout(()=>{
             clearInterval(intervalID);
             recorder.stop();
+            setMsg("Uploading video to server...")
+            setDebounce(false);
         }, time*1000)
     }
 
     return (<div className="recordingCard">
             <Webcam referenceProp={webcamReference}/>
-            <p>Look at the camera for {useSeconds} more seconds.</p>
+            <p>{useMsg}</p>
             <label htmlFor="name">Name:</label>
             <input name="name" type="text" value={useFormData.name} placeholder={initialFormData.name} onChange={handleChange}/>
-            <label htmlFor="age">Age:</label>
-            <input name="age" type="number" value={useFormData.age} min={1} step={1} max={100} placeholder={initialFormData.age.toString()} onChange={handleChange}/>
+            
             <button onClick={()=>{
                 if(useDebounce) return;
+                if(useFormData.name == ""){
+                    setMsg("Please input a name.");
+                    return;
+                }
                 setDebounce(true);
                 recordMedia(timeForRecording)
             }}>Record</button>

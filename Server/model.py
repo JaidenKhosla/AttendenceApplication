@@ -92,7 +92,7 @@ def compare_face(src, threshold: float) -> str:
     if best_fit < threshold:
         return (best_name, float(best_fit))
     
-    return "Unknown"
+    return ["Unknown",-1]
 
 
 def compareFaceRequest(path:str) -> str:
