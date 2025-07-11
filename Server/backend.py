@@ -3,7 +3,10 @@ from flask_cors import CORS
 from flask_executor import Executor
 import os
 import base64
-
+import ffmpeg
+import time
+import uuid
+import subprocess
 from model import trainBasedOnRequest, compareFaceRequest
 
 app = Flask(__name__)
@@ -20,34 +23,50 @@ def convertStringToImage(data_url: str, path: str):
     with open(path, "wb") as file:
         file.write(img_data)
 
+# def convertWebmToMP4(input_path: str) -> str:
+
+#     base, _ = os.path.splitext(input_path)
+#     output_path = base + '.mp4'
+
+#     try:
+#         (
+#             ffmpeg
+#             .input(input_path)
+#             .output(output_path, vcodec='libx264', acodec='aac', strict='experimental')
+#             .run(overwrite_output=True)
+#         )
+#         return output_path
+#     except ffmpeg.Error as e:
+#         print('FFmpeg error:', e.stderr.decode())
+#         raise e
 
 @app.route("/train", methods=["POST"])
 def train():
     try:
         if "video" not in request.files:
-            return "Bad Request", 400
+            return jsonify({"message":"Bad Request"}), 400
         
         video = request.files["video"]
-        name = request.json["name"]
+        name = request.form["name"]
         
         if video.filename == '':
-            return "Bad Request", 400
+            return jsonify({"message":"Bad Request"}), 400
         
-        path = os.path.join(UPLOAD_FOLDER, video.filename)
+        path = os.path.join(UPLOAD_FOLDER, f"{uuid.uuid4()}.webm")
         
         video.save(path)
         
         executor.submit(trainBasedOnRequest, name, path)
         
-        return "Success", 200
+        return jsonify({"message":"Success"}), 200
     except Exception as e:
-        return str(e), 409
+        return jsonify({"message" : str(e)}), 409
     
 @app.route("/predict", methods=["POST"])   
 def predict():
     try:
         if "image" not in request.files:
-            return "Bad Request",400
+            return jsonify({"message":"Bad Request"}), 400
         
         file = request.files["image"]
         
@@ -61,9 +80,9 @@ def predict():
         return jsonify({"name": result[0], "distance": result[1]}), 200
     
     except Exception as e:
-        return str(e), 400
+        return jsonify({"message": str(e)}), 409
     
     
 if __name__ == "__main__":
-    app.run()
+    app.run(debug=True)
     
