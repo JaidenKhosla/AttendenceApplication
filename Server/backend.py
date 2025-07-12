@@ -10,6 +10,8 @@ import subprocess
 from model import trainBasedOnRequest, compareFaceRequest
 
 app = Flask(__name__)
+app.config['EXECUTOR_TYPE'] = 'thread'
+app.config['EXECUTOR_MAX_WORKERS'] = 10
 CORS(app)
 executor = Executor(app)
 
@@ -52,11 +54,11 @@ def train():
         if video.filename == '':
             return jsonify({"message":"Bad Request"}), 400
         
-        path = os.path.join(UPLOAD_FOLDER, f"{uuid.uuid4()}.webm")
+        path = os.path.join(UPLOAD_FOLDER, f"{uuid.uuid4()}.mp4")
         
         video.save(path)
         
-        executor.submit(trainBasedOnRequest, name, path)
+        res = executor.submit(trainBasedOnRequest, name, path)
         
         return jsonify({"message":"Success"}), 200
     except Exception as e:

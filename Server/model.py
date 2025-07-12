@@ -17,7 +17,7 @@ def helper(box) -> float:
 
 known_embeddings = pickle.load(open("embeddings.pkl", "rb")) if os.path.exists("embeddings.pkl") else {}
 
-def trainFaceOnVideo(name: str, videoCapture: cv.VideoCapture):
+def trainFaceOnVideo(name: str, videoCapture: cv.VideoCapture) -> str:
     
     embeds = []
     face_crops = []
@@ -65,6 +65,8 @@ def trainFaceOnVideo(name: str, videoCapture: cv.VideoCapture):
     pickle.dump(known_embeddings, open("embeddings.pkl", "wb"))
     
     videoCapture.release()
+    
+    return "Done"
     
 def trainBasedOnRequest(name: str, path: str):
     trainFaceOnVideo(name, cv.VideoCapture(path))

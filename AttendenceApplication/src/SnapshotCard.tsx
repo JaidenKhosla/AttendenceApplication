@@ -28,12 +28,26 @@ export default function SnapshotCard(){
             setMsg([`You are ${useResult["name"]}.`, 'normal'])
         else if(useResult){
             setMsg(["Unknown. Gathering results...", "normal"]);
-            setDisplayRecordingCard(true);
+            setTimeout(()=>setDisplayRecordingCard(true), 1000);
             
         }
     }, [ useResult ])
 
+    function resetWebcam(){
+
+        if(!webcamReference.current) return;
+
+        const oldStream = webcamReference.current?.srcObject as MediaStream;
+
+        webcamReference.current.srcObject = null;
+        webcamReference.current.srcObject = oldStream;
+
+        webcamReference.current.play();
+
+    }
+
     function reset(){
+        resetWebcam();
         setResult(undefined);
         setMsg(waitingMSG);
         setDebounce(false);
@@ -58,7 +72,7 @@ export default function SnapshotCard(){
     return (<><div className="SnapshotCard" style={{display: !useDisplayRecordingCard ? "flex" : "none"}}>
         
         <Webcam referenceProp={webcamReference} shown={!useSnapshot}/>
-        <Snapshot webcamReference={webcamReference} shown={useSnapshot} setResult={setResult}/>
+        <Snapshot webcamReference={webcamReference} shown={useSnapshot} setResult={setResult} resetWebcam={resetWebcam}/>
         
         <p className={useMsg[1]}>{useMsg[0]}</p>
 
@@ -70,6 +84,11 @@ export default function SnapshotCard(){
             ()=>{
                 if(useDebounce) return;
                 setDebounce(true);
+                if(webcamReference.current == null){
+                    setMsg(["Webcam isn't enabled...", "normal"]);
+                    setDebounce(false);
+                    return;
+                }
                 
                 setMsg(["Taking Picture...", "normal"]);
 
@@ -83,7 +102,7 @@ export default function SnapshotCard(){
         }></button>
     </div>
     <div style={{display: useDisplayRecordingCard ? "initial" : "none"}}>
-        <RecordingCard checkIn={checkIn}/>
+        <RecordingCard checkIn={checkIn} resetWebcam={resetWebcam}/>
     </div>
     </>);
 

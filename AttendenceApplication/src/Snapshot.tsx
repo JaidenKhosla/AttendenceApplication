@@ -5,7 +5,8 @@ import type { setResult } from "./SnapshotCard";
 
 interface Props {
     webcamReference: React.RefObject<HTMLVideoElement|null>
-    setResult: setResult
+    setResult: setResult,
+    resetWebcam: Function,
     shown: boolean
 }
 
@@ -37,11 +38,14 @@ export function downloadImageOfCanvas(canvas: HTMLCanvasElement, path: string, s
 
 }
 
-export default function Snapshot({ webcamReference, shown, setResult } : Props){
+export default function Snapshot({ webcamReference, shown, setResult, resetWebcam } : Props){
     
     const canvasRef = useRef<HTMLCanvasElement|null>(null);
     
     useEffect(()=>{
+        
+        resetWebcam();
+
         if(!(canvasRef.current && webcamReference && webcamReference.current)) return;
 
         canvasRef.current.width = webcamReference.current.videoWidth;

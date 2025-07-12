@@ -13,11 +13,12 @@ const initialFormData: formData = {
 }
 
 interface Props {
-    checkIn: Function
+    checkIn: Function,
+    resetWebcam: Function
 }
 
 
-export default function RecordingCard({checkIn} : Props){
+export default function RecordingCard({checkIn, resetWebcam} : Props){
     
     const webcamReference = useRef<HTMLVideoElement|null>(null);
     const [useFormData, setFormData] = useState<formData>({
@@ -36,8 +37,9 @@ export default function RecordingCard({checkIn} : Props){
             [target.name]: target.name == "age" ? Math.min(Number.parseInt(target.value), 100) : target.value
         })
     }
-    
+
     function recordMedia(time: number){
+        resetWebcam();
         const chunks: Blob[] = []
 
         const stream = webcamReference.current?.srcObject as MediaStream;
@@ -102,5 +104,5 @@ export default function RecordingCard({checkIn} : Props){
                 setDebounce(true);
                 recordMedia(timeForRecording)
             }}>Record</button>
-        </div>)
+        </div>);
 }
